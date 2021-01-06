@@ -36,13 +36,11 @@ NSString * const downloadUrl3 = @"http://pic6.nipic.com/20100330/4592428_1133480
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSLog(@"%@", NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES));
-    
+    NSLog(@"%@", NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES));    
     [self refreshDataWithState:DownloadStateSuspended];
 }
 
-#pragma mark 刷新数据
+#pragma mark - 刷新数据
 - (void)refreshDataWithState:(DownloadState)state
 {
     self.progressLabel1.text = [NSString stringWithFormat:@"%.f%%", [[HSDownloadManager sharedInstance] progress:downloadUrl1] * 100];
@@ -60,23 +58,20 @@ NSString * const downloadUrl3 = @"http://pic6.nipic.com/20100330/4592428_1133480
     NSLog(@"-----%f", [[HSDownloadManager sharedInstance] progress:downloadUrl2]);
 }
 
-#pragma mark 下载按钮事件
+#pragma mark - 下载按钮事件
 - (IBAction)download1:(UIButton *)sender {
-    
     [self download:downloadUrl1 progressLabel:self.progressLabel1 progressView:self.progressView1 button:sender];
 }
 
 - (IBAction)download2:(UIButton *)sender {
-    
     [self download:downloadUrl2 progressLabel:self.progressLabel2 progressView:self.progressView2 button:sender];
 }
 
 - (IBAction)download3:(UIButton *)sender {
-    
     [self download:downloadUrl3 progressLabel:self.progressLabel3 progressView:self.progressView3 button:sender];
 }
 
-#pragma mark 删除
+#pragma mark - 删除
 - (IBAction)deleteFile1:(UIButton *)sender {
     [[HSDownloadManager sharedInstance] deleteFile:downloadUrl1];
 
@@ -105,7 +100,7 @@ NSString * const downloadUrl3 = @"http://pic6.nipic.com/20100330/4592428_1133480
 }
 
 
-#pragma mark 开启任务下载资源
+#pragma mark - 开启任务下载资源
 - (void)download:(NSString *)url progressLabel:(UILabel *)progressLabel progressView:(UIProgressView *)progressView button:(UIButton *)button
 {
     [[HSDownloadManager sharedInstance] download:url progress:^(NSInteger receivedSize, NSInteger expectedSize, CGFloat progress) {
@@ -120,7 +115,7 @@ NSString * const downloadUrl3 = @"http://pic6.nipic.com/20100330/4592428_1133480
     }];
 }
 
-#pragma mark 按钮状态
+#pragma mark - 按钮状态
 - (NSString *)getTitleWithDownloadState:(DownloadState)state
 {
     switch (state) {

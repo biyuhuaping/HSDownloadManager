@@ -6,19 +6,19 @@
 //  Copyright © 2015年 hans. All rights reserved.
 //
 
-// 缓存主目录
+/// 缓存主目录
 #define HSCachesDirectory [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"HSCache"]
 
-// 保存文件名
+/// 保存文件名
 #define HSFileName(url) url.md5String
 
-// 文件的存放路径（caches）
+/// 文件的存放路径（caches）
 #define HSFileFullpath(url) [HSCachesDirectory stringByAppendingPathComponent:HSFileName(url)]
 
-// 文件的已下载长度
+/// 文件的已下载长度
 #define HSDownloadLength(url) [[[NSFileManager defaultManager] attributesOfItemAtPath:HSFileFullpath(url) error:nil][NSFileSize] integerValue]
 
-// 存储文件总长度的文件路径（caches）
+/// 存储文件总长度的文件路径（caches）
 #define HSTotalLengthFullpath [HSCachesDirectory stringByAppendingPathComponent:@"totalLength.plist"]
 
 #import "HSDownloadManager.h"
@@ -26,10 +26,11 @@
 
 @interface HSDownloadManager()<NSCopying, NSURLSessionDelegate>
 
-/** 保存所有任务(注：用下载地址md5后作为key) */
+/// 保存所有任务(注：用下载地址md5后作为key)
 @property (nonatomic, strong) NSMutableDictionary *tasks;
-/** 保存所有下载相关信息 */
+/// 保存所有下载相关信息
 @property (nonatomic, strong) NSMutableDictionary *sessionModels;
+
 @end
 
 @implementation HSDownloadManager
@@ -79,9 +80,7 @@ static HSDownloadManager *_downloadManager;
     return _downloadManager;
 }
 
-/**
- *  创建缓存目录文件
- */
+/// 创建缓存目录文件
 - (void)createCacheDirectory
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -90,9 +89,7 @@ static HSDownloadManager *_downloadManager;
     }
 }
 
-/**
- *  开启任务下载资源
- */
+/// 开启任务下载资源
 - (void)download:(NSString *)url progress:(void (^)(NSInteger, NSInteger, CGFloat))progressBlock state:(void (^)(DownloadState))stateBlock
 {
     if (!url) return;
@@ -153,9 +150,7 @@ static HSDownloadManager *_downloadManager;
     }
 }
 
-/**
- *  开始下载
- */
+/// 开始下载
 - (void)start:(NSString *)url
 {
     NSURLSessionDataTask *task = [self getTask:url];
@@ -164,9 +159,7 @@ static HSDownloadManager *_downloadManager;
     [self getSessionModel:task.taskIdentifier].stateBlock(DownloadStateStart);
 }
 
-/**
- *  暂停下载
- */
+/// 暂停下载
 - (void)pause:(NSString *)url
 {
     NSURLSessionDataTask *task = [self getTask:url];
@@ -175,25 +168,19 @@ static HSDownloadManager *_downloadManager;
     [self getSessionModel:task.taskIdentifier].stateBlock(DownloadStateSuspended);
 }
 
-/**
- *  根据url获得对应的下载任务
- */
+/// 根据url获得对应的下载任务
 - (NSURLSessionDataTask *)getTask:(NSString *)url
 {
     return (NSURLSessionDataTask *)[self.tasks valueForKey:HSFileName(url)];
 }
 
-/**
- *  根据url获取对应的下载信息模型
- */
+/// 根据url获取对应的下载信息模型
 - (HSSessionModel *)getSessionModel:(NSUInteger)taskIdentifier
 {
     return (HSSessionModel *)[self.sessionModels valueForKey:@(taskIdentifier).stringValue];
 }
 
-/**
- *  判断该文件是否下载完成
- */
+/// 判断该文件是否下载完成
 - (BOOL)isCompletion:(NSString *)url
 {
     if ([self fileTotalLength:url] && HSDownloadLength(url) == [self fileTotalLength:url]) {
@@ -202,31 +189,24 @@ static HSDownloadManager *_downloadManager;
     return NO;
 }
 
-/**
- *  查询该资源的下载进度值
- */
+/// 查询该资源的下载进度值
 - (CGFloat)progress:(NSString *)url
 {
     return [self fileTotalLength:url] == 0 ? 0.0 : 1.0 * HSDownloadLength(url) /  [self fileTotalLength:url];
 }
 
-/**
- *  获取该资源总大小
- */
+/// 获取该资源总大小
 - (NSInteger)fileTotalLength:(NSString *)url
 {
     return [[NSDictionary dictionaryWithContentsOfFile:HSTotalLengthFullpath][HSFileName(url)] integerValue];
 }
 
 #pragma mark - 删除
-/**
- *  删除该资源
- */
+/// 删除该资源
 - (void)deleteFile:(NSString *)url
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:HSFileFullpath(url)]) {
-
         // 删除沙盒中的资源
         [fileManager removeItemAtPath:HSFileFullpath(url) error:nil];
         // 删除任务
@@ -234,18 +214,14 @@ static HSDownloadManager *_downloadManager;
         [self.sessionModels removeObjectForKey:@([self getTask:url].taskIdentifier).stringValue];
         // 删除资源总长度
         if ([fileManager fileExistsAtPath:HSTotalLengthFullpath]) {
-            
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithContentsOfFile:HSTotalLengthFullpath];
             [dict removeObjectForKey:HSFileName(url)];
             [dict writeToFile:HSTotalLengthFullpath atomically:YES];
-        
         }
     }
 }
 
-/**
- *  清空所有下载资源
- */
+/// 清空所有下载资源
 - (void)deleteAllFile
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -270,9 +246,7 @@ static HSDownloadManager *_downloadManager;
 
 #pragma mark - 代理
 #pragma mark NSURLSessionDataDelegate
-/**
- * 接收到响应
- */
+/// 接收到响应
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSHTTPURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
 {
     
@@ -295,9 +269,7 @@ static HSDownloadManager *_downloadManager;
     completionHandler(NSURLSessionResponseAllow);
 }
 
-/**
- * 接收到服务器返回的数据
- */
+/// 接收到服务器返回的数据
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
 {
     HSSessionModel *sessionModel = [self getSessionModel:dataTask.taskIdentifier];
@@ -313,9 +285,7 @@ static HSDownloadManager *_downloadManager;
     sessionModel.progressBlock(receivedSize, expectedSize, progress);
 }
 
-/**
- * 请求完毕（成功|失败）
- */
+/// 请求完毕（成功|失败）
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
     HSSessionModel *sessionModel = [self getSessionModel:task.taskIdentifier];

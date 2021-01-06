@@ -138,6 +138,7 @@
 				TargetAttributes = {
 					3AB9E6A81B70E02700FF1C9A = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = BNV27HH5PK;
 					};
 				};
 			};
@@ -146,6 +147,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -283,10 +285,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = BNV27HH5PK;
 				INFOPLIST_FILE = HSDownloadManagerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = hans.plub.HSDownloadManagerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zhoubo.--";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -295,10 +298,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = BNV27HH5PK;
 				INFOPLIST_FILE = HSDownloadManagerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = hans.plub.HSDownloadManagerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zhoubo.--";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
